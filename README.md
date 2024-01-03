@@ -1,24 +1,25 @@
-# PackwerkYard
+# Packwerk Yard
 
-TODO: Delete this and the text below, and describe your gem
+> [!WARNING]
+> This gem currently depends on a development branch for packwerk !!!
+> Once https://github.com/Shopify/packwerk/pull/375 is merged and released, can this gem be safely used.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/packwerk_yard`. To experiment with that code, run `bin/console` for an interactive prompt.
+Add YARD support to packwerk.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+1. Add this line to your application's Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
+```ruby
+gem 'packwerk_yard', github: 'euglena1215/packwerk_yard', group: :development
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+2. Require `packwerk-yard` in your `packwerk.yml`
 
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-
-## Usage
-
-TODO: Write usage instructions here
+```yaml
+require:
+  - packwerk-yard
+```
 
 ## Development
 
@@ -28,7 +29,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/packwerk_yard. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/packwerk_yard/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/euglena1215/packwerk_yard. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/packwerk_yard/blob/main/CODE_OF_CONDUCT.md).
 
 ## Code of Conduct
 
