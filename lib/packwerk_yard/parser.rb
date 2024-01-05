@@ -14,11 +14,12 @@ module PackwerkYard
 
     def call(io:, file_path: "<unknown>")
       source_code = io.read
-      return to_ruby_ast(nil.inspect, file_path + ".yard") if source_code.nil?
+      file_path = file_path.gsub('.rb', '.yard.rb')
+      return to_ruby_ast(nil.inspect, file_path) if source_code.nil?
 
       types = extract_from_yard_to_types(source_code)
 
-      to_ruby_ast(types.map { |type| to_constant(type) }.compact.inspect, file_path + ".yard")
+      to_ruby_ast(types.map { |type| to_constant(type) }.compact.inspect, file_path)
     end
 
     def match?(path:)
