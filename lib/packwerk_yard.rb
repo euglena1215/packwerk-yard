@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "packwerk_yard/version"
+require "packwerk"
+require "yard"
 
-module PackwerkYard
-  class Error < StandardError; end
-  # Your code goes here...
+require_relative "packwerk_yard/version"
+require_relative "packwerk_yard/parser"
+
+module PackwerkYard # rubocop:disable Style/Documentation
 end
