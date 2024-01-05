@@ -9,7 +9,7 @@ module PackwerkYard
       io = StringIO.new(File.read("test/fixtures/yard/valid.rb"))
       node = parser.call(io: io, file_path: "test/fixtures/yard/valid.rb")
 
-      assert_instance_of Parser::AST::Node, node
+      assert_instance_of ::Parser::AST::Node, node
       assert node.type, :array
       assert node.children[0].children[1], :String
     end
@@ -19,7 +19,7 @@ module PackwerkYard
       io = StringIO.new(File.read("test/fixtures/yard/not_exists_class_args.rb"))
       node = parser.call(io: io, file_path: "test/fixtures/yard/not_exists_class_args.rb")
 
-      assert_instance_of Parser::AST::Node, node
+      assert_instance_of ::Parser::AST::Node, node
       assert node.type, :array
       assert node.children.size, 0
     end
