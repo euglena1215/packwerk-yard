@@ -8,8 +8,9 @@ gemspec
 # TODO: Move to gemspec after merged https://github.com/Shopify/packwerk/pull/375
 gem "packwerk", git: "https://github.com/richardmarbach/packwerk", branch: "configurable_parser_interface"
 
-gem "rake", "~> 13.0"
-
-gem "minitest", "~> 5.16"
-
-gem "rubocop", "~> 1.21"
+gem "minitest"
+gem "rake"
+gem "rubocop", require: false
+gem "rubocop-performance", require: false
+gem "rubocop-sorbet", require: false
+gem "rubocop-shopify", require: false

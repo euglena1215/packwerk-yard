@@ -1,7 +1,8 @@
+# typed: false
 # frozen_string_literal: true
 
 module PackwerkYard
-  class Parser # rubocop:disable Style/Documentation
+  class Parser
     include Packwerk::FileParser
 
     # Array Syntax e.g. Array<String>
@@ -21,8 +22,8 @@ module PackwerkYard
       to_ruby_ast(
         types.map { |type| to_evaluable_type(type) }
              .reject { |type| to_constant(type).nil? }
-             .inspect.gsub('"', ""),
-        file_path
+             .inspect.delete('"'),
+        file_path,
       )
     end
 
@@ -58,7 +59,7 @@ module PackwerkYard
     end
 
     def to_constant(name)
-      Object.const_get(name)
+      Object.const_get(name) # rubocop:disable Sorbet/ConstantsFromStrings
     rescue NameError
       nil
     end
@@ -66,7 +67,7 @@ module PackwerkYard
     def to_ruby_ast(code, file_path)
       @ruby_parser.call(
         io: StringIO.new(code),
-        file_path: file_path
+        file_path: file_path,
       )
     end
   end
