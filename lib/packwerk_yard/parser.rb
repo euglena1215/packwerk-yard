@@ -14,12 +14,16 @@ module PackwerkYard
 
     def call(io:, file_path: "<unknown>")
       source_code = io.read
-      file_path = file_path.gsub('.rb', '.yard.rb')
       return to_ruby_ast(nil.inspect, file_path) if source_code.nil?
 
       types = extract_from_yard_to_types(source_code)
 
-      to_ruby_ast(types.map { |type| to_constant(type) }.compact.inspect, file_path)
+      to_ruby_ast(
+        types.map { |type| to_evaluable_type(type) }
+             .reject { |type| to_constant(type).nil? }
+             .inspect.gsub('"', ""),
+        file_path
+      )
     end
 
     def match?(path:)
@@ -29,7 +33,6 @@ module PackwerkYard
     private
 
     def extract_from_yard_to_types(source_code)
-      # TODO: parallel で packwerk が動作すると競合が発生する可能性があるため調査する
       YARD::Registry.clear
       YARD::Parser::SourceParser.parse_string(source_code)
 
@@ -45,8 +48,16 @@ module PackwerkYard
       types.uniq
     end
 
+    def to_evaluable_type(type)
+      # "Array<Integer>" => "Integer"
+      if type =~ ARRAY_REGEXP
+        Regexp.last_match(1)
+      else
+        type
+      end
+    end
+
     def to_constant(name)
-      name = Regexp.last_match(1) if name =~ ARRAY_REGEXP
       Object.const_get(name)
     rescue NameError
       nil
