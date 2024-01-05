@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/euglena1215/packwerk-yard"
   spec.metadata["changelog_uri"] = "https://github.com/euglena1215/packwerk-yard/blob/main/CHANGELOG.md"
+  spec.metadata["rubygems_mfa_required"] = "true"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -32,5 +33,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "yard"
-  spec.metadata["rubygems_mfa_required"] = "true"
+  spec.add_dependency "parser"
 end

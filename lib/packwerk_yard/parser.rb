@@ -4,6 +4,10 @@ module PackwerkYard
   class Parser # rubocop:disable Style/Documentation
     include Packwerk::FileParser
 
+    # Array Syntax e.g. Array<String>
+    ARRAY_REGEXP = /Array<(.+)>/.freeze
+    private_constant :ARRAY_REGEXP
+
     def initialize(ruby_parser: Packwerk::Parsers::Ruby.new)
       @ruby_parser = ruby_parser
     end
@@ -41,6 +45,7 @@ module PackwerkYard
     end
 
     def to_constant(name)
+      name = Regexp.last_match(1) if name =~ ARRAY_REGEXP
       Object.const_get(name)
     rescue NameError
       nil
