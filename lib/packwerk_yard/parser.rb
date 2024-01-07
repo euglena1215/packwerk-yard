@@ -35,7 +35,9 @@ module PackwerkYard
 
     def extract_from_yard_to_types(source_code)
       YARD::Registry.clear
-      YARD::Parser::SourceParser.parse_string(source_code)
+      YARD::Logger.instance.enter_level(YARD::Logger::ERROR) do
+        YARD::Parser::SourceParser.parse_string(source_code)
+      end
 
       types = YARD::Registry.all(:method).each_with_object([]) do |method_object, arr|
         method_object.tags("param").each do |tag|
