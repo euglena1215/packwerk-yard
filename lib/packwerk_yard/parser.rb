@@ -7,8 +7,12 @@ module PackwerkYard
     include Packwerk::FileParser
 
     # Array Syntax e.g. Array<String>
-    ARRAY_REGEXP = T.let(/Array<(.+)>/.freeze, Regexp)
+    ARRAY_REGEXP = T.let(/\AArray<(.+)>/.freeze, Regexp)
     private_constant :ARRAY_REGEXP
+
+    # Hash Syntax e.g. Hash<String, String>
+    HASH_REGEXP = T.let(/\AHash<([^,]*),\s?(.*)>/.freeze, Regexp)
+    private_constant :HASH_REGEXP
 
     sig { params(ruby_parser: T.nilable(Packwerk::Parsers::Ruby)).void }
     def initialize(ruby_parser: Packwerk::Parsers::Ruby.new)
@@ -23,7 +27,7 @@ module PackwerkYard
       types = extract_from_yard_to_types(source_code)
 
       to_ruby_ast(
-        types.map { |type| to_evaluable_type(type) }
+        types.map { |type| to_evaluable_type(type) }.flatten
              .reject { |type| to_constant(type).nil? }
              .inspect.delete('"'),
         file_path,
@@ -56,9 +60,11 @@ module PackwerkYard
       types.uniq
     end
 
-    sig { params(type: String).returns(String) }
+    sig { params(type: String).returns(T::Array[String]) }
     def to_evaluable_type(type)
-      ARRAY_REGEXP.match(type).to_a[1] || type
+      matched_types = Array(ARRAY_REGEXP.match(type).to_a[1])
+      matched_types = Array(HASH_REGEXP.match(type).to_a[1..2]) if matched_types.empty?
+      matched_types.empty? ? [type] : matched_types.map { |t| to_evaluable_type(t) }.flatten
     end
 
     sig { params(name: T.any(Symbol, String)).returns(T.untyped) }
