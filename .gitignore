@@ -6,3 +6,5 @@
 /pkg/
 /spec/reports/
 /tmp/
+
+sorbet/rbi/hidden-definitions/errors.txt

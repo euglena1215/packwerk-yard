@@ -14,3 +14,5 @@ gem "rubocop", require: false
 gem "rubocop-performance", require: false
 gem "rubocop-sorbet", require: false
 gem "rubocop-shopify", require: false
+gem "sorbet-static-and-runtime"
+gem "tapioca", require: false
