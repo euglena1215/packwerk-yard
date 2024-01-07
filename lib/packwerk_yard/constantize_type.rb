@@ -10,8 +10,12 @@ module PackwerkYard
     private_constant :ARRAY_REGEXP
 
     # Hash Syntax e.g. Hash<String, String>
-    HASH_REGEXP = T.let(/\AHash<([^,]*),\s?(.*)>/.freeze, Regexp)
+    HASH_REGEXP = T.let(/\AHash<([^,\s]+)\s*,\s*(.+)>/.freeze, Regexp)
     private_constant :HASH_REGEXP
+
+    # Hash Syntax e.g. Hash{String => String}
+    HASH_SPECIFIC_REGEXP = T.let(/\AHash\{([^,\s]+)\s*=>\s*(.+)}/.freeze, Regexp)
+    private_constant :HASH_SPECIFIC_REGEXP
 
     sig { params(yard_type: String).void }
     def initialize(yard_type)
@@ -37,6 +41,7 @@ module PackwerkYard
     def split_type(type)
       matched_types = Array(ARRAY_REGEXP.match(type).to_a[1])
       matched_types = Array(HASH_REGEXP.match(type).to_a[1..2]) if matched_types.empty?
+      matched_types = Array(HASH_SPECIFIC_REGEXP.match(type).to_a[1..2]) if matched_types.empty?
       matched_types.empty? ? [type] : matched_types.map { |t| split_type(t) }.flatten
     end
   end

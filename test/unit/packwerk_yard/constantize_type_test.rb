@@ -36,6 +36,14 @@ module PackwerkYard
       assert_equal(["Integer", "String"], types)
     end
 
+    def test_types_returns_constantize_types_with_hash_specific_format
+      types = PackwerkYard::ConstantizeType.new("Hash{Integer => String}").types
+      assert_equal(["Integer", "String"], types)
+
+      types = PackwerkYard::ConstantizeType.new("Hash{Integer=>String}").types
+      assert_equal(["Integer", "String"], types)
+    end
+
     def test_types_returns_constantize_types_with_not_existing_class
       types = PackwerkYard::ConstantizeType.new("NotExistsClass").types
 
