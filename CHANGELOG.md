@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 - Some refactoring https://github.com/euglena1215/packwerk-yard/pull/11
+- Support hash specific format sush as Hash{String => Integer} https://github.com/euglena1215/packwerk-yard/pull/12
 
 ## [0.2.0] - 2024-01-07
 

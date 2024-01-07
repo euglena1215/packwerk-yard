@@ -68,5 +68,22 @@ module PackwerkYard
       assert_equal(["String", "Integer"], handler.param_types)
       assert_equal(["String", "Integer"], handler.return_types)
     end
+
+    def test_from_source_with_hash_specific_format
+      code = <<~RUBY
+        class Foo
+          # @param [Hash{Integer => String}] foo
+          # @return [Hash{Integer=>String}]
+          def bar(foo)
+            foo
+          end
+        end
+      RUBY
+
+      handler = PackwerkYard::YardHandler.from_source(code)
+
+      assert_equal(["Hash{Integer => String}"], handler.param_types)
+      assert_equal(["Hash{Integer=>String}"], handler.return_types)
+    end
   end
 end
