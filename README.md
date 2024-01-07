@@ -11,7 +11,7 @@ Add YARD support to packwerk.
 1. Add this line to your application's Gemfile:
 
 ```ruby
-gem 'packwerk_yard', github: 'euglena1215/packwerk-yard', group: :development
+gem 'packwerk_yard', require: false, group: :development
 ```
 
 2. Require `packwerk-yard` in your `packwerk.yml`
