@@ -6,14 +6,6 @@ module PackwerkYard
     extend T::Sig
     include Packwerk::FileParser
 
-    # Array Syntax e.g. Array<String>
-    ARRAY_REGEXP = T.let(/\AArray<(.+)>/.freeze, Regexp)
-    private_constant :ARRAY_REGEXP
-
-    # Hash Syntax e.g. Hash<String, String>
-    HASH_REGEXP = T.let(/\AHash<([^,]*),\s?(.*)>/.freeze, Regexp)
-    private_constant :HASH_REGEXP
-
     sig { params(ruby_parser: T.nilable(Packwerk::Parsers::Ruby)).void }
     def initialize(ruby_parser: Packwerk::Parsers::Ruby.new)
       @ruby_parser = ruby_parser
@@ -27,8 +19,7 @@ module PackwerkYard
       types = extract_from_yard_to_types(source_code)
 
       to_ruby_ast(
-        types.map { |type| to_evaluable_type(type) }.flatten
-             .select { |type| constantize?(type) }
+        types.map { |type| ConstantizeType.new(type).types }.flatten
              .inspect.delete('"'),
         file_path,
       )
@@ -58,21 +49,6 @@ module PackwerkYard
       end
 
       types.uniq
-    end
-
-    sig { params(type: String).returns(T::Array[String]) }
-    def to_evaluable_type(type)
-      matched_types = Array(ARRAY_REGEXP.match(type).to_a[1])
-      matched_types = Array(HASH_REGEXP.match(type).to_a[1..2]) if matched_types.empty?
-      matched_types.empty? ? [type] : matched_types.map { |t| to_evaluable_type(t) }.flatten
-    end
-
-    sig { params(name: T.any(Symbol, String)).returns(T::Boolean) }
-    def constantize?(name)
-      Object.const_get(name) # rubocop:disable Sorbet/ConstantsFromStrings
-      true
-    rescue NameError
-      false
     end
 
     sig { params(code: String, file_path: T.untyped).returns(T.untyped) }
