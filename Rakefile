@@ -9,4 +9,8 @@ require "rubocop/rake_task"
 
 RuboCop::RakeTask.new
 
-task default: [:test, :rubocop]
+task :sorbet do
+  sh "bundle exec srb tc"
+end
+
+task default: [:test, :rubocop, :sorbet]
