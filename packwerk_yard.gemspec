@@ -34,4 +34,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency("parser")
   spec.add_dependency("yard")
+  # TODO: Set minimum version of packwerk after merged https://github.com/Shopify/packwerk/pull/375
+  spec.add_dependency("packwerk")
 end
