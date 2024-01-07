@@ -18,6 +18,7 @@ PATH
   remote: .
   specs:
     packwerk_yard (0.1.0)
+      packwerk
       parser
       yard
 
