@@ -28,7 +28,7 @@ module PackwerkYard
 
       to_ruby_ast(
         types.map { |type| to_evaluable_type(type) }.flatten
-             .reject { |type| to_constant(type).nil? }
+             .select { |type| constantize?(type) }
              .inspect.delete('"'),
         file_path,
       )
@@ -67,11 +67,12 @@ module PackwerkYard
       matched_types.empty? ? [type] : matched_types.map { |t| to_evaluable_type(t) }.flatten
     end
 
-    sig { params(name: T.any(Symbol, String)).returns(T.untyped) }
-    def to_constant(name)
+    sig { params(name: T.any(Symbol, String)).returns(T::Boolean) }
+    def constantize?(name)
       Object.const_get(name) # rubocop:disable Sorbet/ConstantsFromStrings
+      true
     rescue NameError
-      nil
+      false
     end
 
     sig { params(code: String, file_path: T.untyped).returns(T.untyped) }
