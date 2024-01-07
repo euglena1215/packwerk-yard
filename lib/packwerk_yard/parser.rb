@@ -1,18 +1,21 @@
-# typed: false
+# typed: strict
 # frozen_string_literal: true
 
 module PackwerkYard
   class Parser
+    extend T::Sig
     include Packwerk::FileParser
 
     # Array Syntax e.g. Array<String>
-    ARRAY_REGEXP = /Array<(.+)>/.freeze
+    ARRAY_REGEXP = T.let(/Array<(.+)>/.freeze, Regexp)
     private_constant :ARRAY_REGEXP
 
+    sig { params(ruby_parser: T.nilable(Packwerk::Parsers::Ruby)).void }
     def initialize(ruby_parser: Packwerk::Parsers::Ruby.new)
       @ruby_parser = ruby_parser
     end
 
+    sig { override.params(io: T.any(IO, StringIO), file_path: String).returns(T.untyped) }
     def call(io:, file_path: "<unknown>")
       source_code = io.read
       return to_ruby_ast(nil.inspect, file_path) if source_code.nil?
@@ -27,12 +30,14 @@ module PackwerkYard
       )
     end
 
+    sig { override.params(path: String).returns(T::Boolean) }
     def match?(path:)
       path.end_with?(".rb")
     end
 
     private
 
+    sig { params(source_code: String).returns(T::Array[String]) }
     def extract_from_yard_to_types(source_code)
       YARD::Registry.clear
       YARD::Logger.instance.enter_level(YARD::Logger::ERROR) do
@@ -51,23 +56,21 @@ module PackwerkYard
       types.uniq
     end
 
+    sig { params(type: String).returns(String) }
     def to_evaluable_type(type)
-      # "Array<Integer>" => "Integer"
-      if type =~ ARRAY_REGEXP
-        Regexp.last_match(1)
-      else
-        type
-      end
+      ARRAY_REGEXP.match(type).to_a[1] || type
     end
 
+    sig { params(name: T.any(Symbol, String)).returns(T.untyped) }
     def to_constant(name)
       Object.const_get(name) # rubocop:disable Sorbet/ConstantsFromStrings
     rescue NameError
       nil
     end
 
+    sig { params(code: String, file_path: T.untyped).returns(T.untyped) }
     def to_ruby_ast(code, file_path)
-      @ruby_parser.call(
+      T.must(@ruby_parser).call(
         io: StringIO.new(code),
         file_path: file_path,
       )
